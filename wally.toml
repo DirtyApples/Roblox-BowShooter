@@ -1,0 +1,9 @@
+[package]
+name = "dirtyapples/lvl-deathmatch"
+version = "0.1.0"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+
+[dependencies]
+Red = "red-blox/red@^2.0.0"
+Profilestore = "detourious/loleris-profilestore@1.0.0"
