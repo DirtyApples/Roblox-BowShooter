@@ -36,12 +36,10 @@ return {
 			return player
 		end),
 
-		Shoot = Red.Event("PlayerShoot", function(player, shootCFrame, velocity, timestamp)
-			Expect(player, "player", "Instance")
+		Shoot = Red.Event("PlayerShootRequest", function(shootCFrame, timestamp)
 			Expect(shootCFrame, "shootCFrame", "CFrame")
-			Expect(velocity, "velocity", "number")
 			Expect(timestamp, "timestamp", "number")
-			return player, shootCFrame, velocity, timestamp
+			return shootCFrame, timestamp
 		end),
 
 		Damage = Red.Event("PlayerDamage", function(player, value)
@@ -54,6 +52,13 @@ return {
 			Expect(player, "player", "Instance")
 			Expect(value, "value", "number")
 			return player, value
+		end),
+	},
+	Projectile = {
+		created = Red.Event("ProjectileCreated", function(data, timestamp)
+			Expect(data, "data", "{}")
+			Expect(timestamp, "timestamp", "number")
+			return data, timestamp
 		end),
 	},
 }

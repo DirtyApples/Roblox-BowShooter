@@ -41,6 +41,7 @@ function Timer:Turnover(dt: number)
 	while self._time >= self._tickRate do
 		self._time = self._time - self._tickRate
 	end
+	return self.time
 end
 
 function Timer:Tick(dt: number)

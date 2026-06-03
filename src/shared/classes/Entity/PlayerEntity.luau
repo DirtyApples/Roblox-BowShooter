@@ -1,7 +1,9 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 -- Player.lua
 -- Represents a player-controlled entity.
 -- Wraps a Roblox Player + their Character model.
 
+local Projectile = require(ReplicatedStorage.Shared.classes["Projectile.luau"].Projectile)
 local Entity = require(script.Parent.Entity)
 
 ---@class PlayerEntity : Entity
@@ -16,9 +18,7 @@ export type GunStats = {
 	mag: number,
 	damage: number,
 
-	rof: number,
-	projVelocity: number,
-	projGravity: number,
+	projectile: Projectile.Config,
 }
 
 local DEFAULT_GUN_STATS: GunStats = {
@@ -26,8 +26,14 @@ local DEFAULT_GUN_STATS: GunStats = {
 	damage = 7,
 	rof = 0.3,
 
-	projVelocity = 200,
-	projGravity = 9.8,
+	projectile = {
+		damage = 10,
+		velocity = 200,
+		lifetime = 2,
+		gravity = 9.8,
+		drag = 0,
+		size = 0.5,
+	},
 }
 
 -- ─────────────────────────────────────────────

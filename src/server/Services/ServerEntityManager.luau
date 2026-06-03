@@ -3,6 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Events = require(ReplicatedStorage.Shared.Network.Events)
 local Entity = require(ReplicatedStorage.Shared.classes.Entity.Entity)
 local PlayerEntity = require(ReplicatedStorage.Shared.classes.Entity.PlayerEntity)
+local EventBuss = require(ReplicatedStorage.Shared.Utility.EventBuss)
 local ServerEntityManager = {}
 
 local _robloxPlayerMap = {}
@@ -35,9 +36,25 @@ local function OnDamaged(damage: amount, source: Entity)
 	print("OnDamaged")
 end
 
+-- EntityService.lua
+EventBuss.Subscribe(EventBuss.Events.projectileHits, function(hits)
+	for _, hit in hits do
+		local model = hit.model
+		local projectile = hit.projectile
+		local entity = _modelPlayerMap[model]
+		if entity then
+			entity:TakeDamage(projectile:GetDamage(), projectile:GetOwner())
+		end
+	end
+end)
+
 -------------
 -- Utility --
 -------------
+
+function ServerEntityManager.GetPlayers()
+	return _robloxPlayerMap
+end
 
 function ServerEntityManager.GetPlayer(robloxPlayer: Player)
 	return _robloxPlayerMap[robloxPlayer]
