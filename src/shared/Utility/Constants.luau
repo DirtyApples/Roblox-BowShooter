@@ -1,5 +1,13 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 return {
+	TEAMS = {
+		RED = "Red",
+		BLUE = "Blue",
+		-- GREEN = "Green",
+		-- YELLOW = "Yellow",
+	},
+	TEAM_SIZE = 25,
+
 	DEBUG_PROJECTILES = false,
 	DEBUG_PROJECTILE_MODEL = ReplicatedStorage.Models.DebugArrow,
 

@@ -1,10 +1,12 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ModelDestroyer = require(ReplicatedStorage.Shared.Scripts.ModelDestroyer)
 local Projectile = require(script.Parent.Projectile)
 
 local ProjectileModel = setmetatable({}, { __index = Projectile })
 ProjectileModel.__index = ProjectileModel
 
-function ProjectileModel.new(origin: CFrame, config, owner, model: Model)
-	local self = setmetatable(Projectile.new(origin, config, owner), ProjectileModel)
+function ProjectileModel.new(origin: CFrame, config, owner, raycastParams: RaycastParams, model: Model)
+	local self = setmetatable(Projectile.new(origin, config, owner, raycastParams), ProjectileModel)
 
 	-- Clone and anchor the model
 	self._model = model:Clone()
@@ -14,6 +16,12 @@ function ProjectileModel.new(origin: CFrame, config, owner, model: Model)
 	-- Destroy model on geometry hit or expiry
 	local function cleanup()
 		if self._model and self._model.Parent then
+			if self._geoHit then
+				self._model.Parent = self._geoHit
+				ModelDestroyer.destroyAfter(self._model, 5)
+				return
+			end
+
 			self._model:Destroy()
 			self._model = nil
 		end

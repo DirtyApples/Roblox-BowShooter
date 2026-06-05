@@ -29,6 +29,16 @@
 local ReferenceTable = {}
 ReferenceTable.__index = ReferenceTable
 
+export type ReferenceTable<K, V> = typeof(setmetatable(
+	{} :: {
+		_keys: { K },
+		_values: { V },
+		_keyToIndex: { [K]: number },
+		_size: number,
+	},
+	ReferenceTable
+))
+
 function ReferenceTable.new(size: number)
 	local self = setmetatable({}, ReferenceTable)
 

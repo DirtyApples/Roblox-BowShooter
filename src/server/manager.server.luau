@@ -7,11 +7,25 @@ local StarterPlayer = game:GetService("StarterPlayer")
 local ServerEntityManager = require(ServerScriptService.Server.Services.ServerEntityManager)
 local ServerPlayerData = require(ServerScriptService.Server.Services.ServerPlayerData)
 local ServerCharacterLoader = require(ServerScriptService.Server.Services.ServerCharacterLoader)
-local ServerPlayerManager = require(ServerScriptService.Server.Services.ServerPlayerManager)
 local ServerProjectileManager = require(ServerScriptService.Server.Services.ServerProjectileManager)
+local ServerTeamManager = require(ServerScriptService.Server.Services.ServerTeamManager)
 local Red = require(ReplicatedStorage.Packages.Red)
 local Events = require(ReplicatedStorage.Shared.Network.Events)
+local TeamManager = require(ReplicatedStorage.Shared.Services.TeamManager)
+local Constants = require(ReplicatedStorage.Shared.Utility.Constants)
 local PlayerEntity = require(ReplicatedStorage.Shared.classes.Entity.PlayerEntity)
+local CollisionGroup = require(ReplicatedStorage.Shared.classes.Wrappers.CollisionGroup)
+
+------------------
+--Initilization--
+------------------
+
+Players.CharacterAutoLoads = false
+ServerTeamManager.InitializeTeams(Constants.TEAMS)
+
+------------------
+-- On Functions --
+------------------
 
 local function onPlayerAdded(robloxPlayer)
 	if not ServerPlayerData.PlayerJoined(robloxPlayer) then
@@ -19,10 +33,15 @@ local function onPlayerAdded(robloxPlayer)
 		return
 	end
 
+	ServerTeamManager.AssigneRandom(robloxPlayer)
+
 	-- CHARACTER LOAD
 	robloxPlayer.CharacterAdded:Connect(function(character)
 		local humanoid = character:WaitForChild("Humanoid")
 		ServerCharacterLoader.ApplyDescription(humanoid, robloxPlayer)
+
+		CollisionGroup.assignModel(character, ServerTeamManager.GetPlayerTeam(robloxPlayer))
+
 		--ServerCharacterLoader.ConstructRig(character)
 	end)
 end
@@ -44,6 +63,7 @@ end
 local function onPlayerRespawnReuest(robloxPlayer)
 	robloxPlayer:LoadCharacter()
 	ServerEntityManager.SpawnPlayer(robloxPlayer)
+
 	print(ServerEntityManager.GetPlayers())
 end
 
@@ -53,7 +73,10 @@ local function onPlayerShoot(robloxPlayer: Player, origin: CFrame, timestamp: nu
 		warn("Player attempted to shoot with no playerEntity.")
 		return
 	end
-	ServerProjectileManager.CreateProjectile(robloxPlayer, origin, player:GunStats(), timestamp)
+
+	--TODO: COLLISION GROUP FOR PROJECTILES
+	local collisionInfo = ServerTeamManager.GetRaycastParams(robloxPlayer)
+	ServerProjectileManager.CreateProjectile(robloxPlayer, origin, player:GunStats(), collisionInfo, timestamp)
 end
 
 ---------------

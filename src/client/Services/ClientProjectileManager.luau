@@ -25,9 +25,14 @@ function ServerProjectileManager.Update(dt: number)
 	ProjectileManager.Update(dt)
 end
 
-function ServerProjectileManager.CreateProjectile(robloxPlayer: Player, origin: CFrame, config: Projectile.Config)
+function ServerProjectileManager.CreateProjectile(
+	robloxPlayer: Player,
+	origin: CFrame,
+	config: Projectile.Config,
+	raycastParams: RaycastParams
+)
 	local projectile = nil
-	projectile = ProjectileModel.new(origin, config, robloxPlayer, Constants.PROJECTILE_MODEL)
+	projectile = ProjectileModel.new(origin, config, robloxPlayer, raycastParams, Constants.PROJECTILE_MODEL)
 	ProjectileManager.AddProjectile(projectile)
 end
 

@@ -4,6 +4,17 @@ local Red = require(ReplicatedStorage.Packages.Red)
 local Expect = require(script.Parent.Utility).Expect
 
 return {
+	Teams = {
+		Init = Red.Event("TeamsInit", function(data)
+			Expect(data, "data", "table")
+			return data
+		end),
+		Joined = Red.Event("TeamsJoined", function(player, teamName)
+			Expect(player, "player", "Instance")
+			Expect(teamName, "teamName", "string")
+			return player, teamName
+		end),
+	},
 	Player = {
 		Sync = Red.Event("PlayerInit", function(data)
 			Expect(data, "data", "table")

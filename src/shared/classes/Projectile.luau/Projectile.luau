@@ -62,7 +62,7 @@ Projectile.__index = Projectile
 ---@param config Config?       Optional physics overrides.
 ---@param owner Player?        The player who fired the projectile.
 ---@return Projectile
-function Projectile.new(origin: CFrame, config: Config?, owner: Player?): Projectile
+function Projectile.new(origin: CFrame, config: Config?, owner: Player?, raycastParams: RaycastParams?): Projectile
 	local cfg = config or {}
 	local self = setmetatable({}, Projectile)
 
@@ -70,6 +70,8 @@ function Projectile.new(origin: CFrame, config: Config?, owner: Player?): Projec
 	self._damage = cfg.damage or DEFAULTS.damage
 
 	-- ── Physics state ───────────────────────
+	self._raycastParams = raycastParams
+
 	self._position = origin.Position
 	self._direction = origin.LookVector -- updated each frame to follow arc
 	self._speed = cfg.velocity or DEFAULTS.velocity
@@ -83,6 +85,7 @@ function Projectile.new(origin: CFrame, config: Config?, owner: Player?): Projec
 	self._lifetime = cfg.lifetime or DEFAULTS.lifetime
 	self._time = 0
 	self._expired = false
+	self._geoHit = nil
 
 	-- ── Callbacks ───────────────────────────
 	self._onGeometryHitCallbacks = {} :: { (hit: HitResult) -> () }
@@ -114,6 +117,10 @@ end
 
 function Projectile:GetDamage(): number
 	return self._damage
+end
+
+function Projectile:GetRaycastParams(): number
+	return self._raycastParams
 end
 
 ---Normalised 0-1 progress through lifetime. Useful for client-side VFX lerping.
@@ -165,6 +172,7 @@ end
 -- ─────────────────────────────────────────────
 
 function Projectile:Destroy()
+	print("ProjctileDestroyed")
 	self:_fireCallbacks(self._onDestroyCallbacks)
 	self._onGeometryHitCallbacks = {}
 	self._onExpiredCallbacks = {}
@@ -226,10 +234,13 @@ function Projectile:_travel(dt: number, geometryFilter: RaycastParams?): TravelR
 	local endPosition: Vector3
 	local geometryHit: HitResult? = nil
 	local model = nil
+	self._geoHit = nil
 
 	if raycastResult then
 		model = if raycastResult.Instance then raycastResult.Instance:FindFirstAncestorOfClass("Model") else nil
+		self._geoHit = if raycastResult.Instance then raycastResult.Instance else nil
 	end
+
 	if raycastResult and model ~= self:GetOwner().Character then
 		endPosition = raycastResult.Position
 		geometryHit = {
@@ -237,7 +248,7 @@ function Projectile:_travel(dt: number, geometryFilter: RaycastParams?): TravelR
 			normal = raycastResult.Normal,
 			instance = raycastResult.Instance,
 			material = raycastResult.Material,
-			model = if raycastResult.Instance then raycastResult.Instance:FindFirstAncestorOfClass("Model") else nil,
+			model = model,
 			distance = raycastResult.Distance,
 		}
 
