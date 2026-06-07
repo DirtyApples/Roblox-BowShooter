@@ -81,7 +81,7 @@ function Entity:TakeDamage(amount: number, source: Entity?)
 		return
 	end
 
-	self._health = math.max(0, self._health - amount)
+	self:SetHealth(self._health - amount)
 	self:_fireCallbacks(self._onDamagedCallbacks, amount, source)
 
 	if self._health <= 0 then

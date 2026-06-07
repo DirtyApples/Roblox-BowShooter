@@ -6,13 +6,18 @@ local UserInputService = game:GetService("UserInputService")
 local UserInputService = game:GetService("UserInputService")
 local Workspace = game:GetService("Workspace")
 
+local CharmSync = require(ReplicatedStorage.Packages["charm-sync"])
 local ClientProjectileManager = require(StarterPlayer.StarterPlayerScripts.Client.Services.ClientProjectileManager)
+local MountUI = require(StarterPlayer.StarterPlayerScripts.Client.UI.MountUI)
+local UiConstants = require(StarterPlayer.StarterPlayerScripts.Client.UI.app.UiConstants)
 local Events = require(ReplicatedStorage.Shared.Network.Events)
 local TeamManager = require(ReplicatedStorage.Shared.Services.TeamManager)
 local Constants = require(ReplicatedStorage.Shared.Utility.Constants)
 local PlayerEntity = require(ReplicatedStorage.Shared.classes.Entity.PlayerEntity)
 
 local RobloxPlayer = Players.LocalPlayer
+
+UiConstants.DEBUG = false
 
 -- Create ScreenGui
 local screenGui = Instance.new("ScreenGui")
@@ -28,9 +33,14 @@ button.Parent = screenGui
 
 -- TODO: Client Team Manager
 
+-- UI
+MountUI()
+
 -- Incomming --
 
 -- EVENTS --
+
+Events.Charm.RequestState:Client():Fire()
 
 -- Respawn
 button.Activated:Connect(function()

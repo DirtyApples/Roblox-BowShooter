@@ -37,7 +37,6 @@ end
 -- Override Update to sync model position each frame
 function ProjectileModel:Update(dt: number, geometryFilter: RaycastParams?)
 	local result = Projectile.Update(self, dt, geometryFilter)
-	print("Update")
 	if result and self._model and self._model.Parent then
 		-- Face the model along the travel direction
 		local cf = CFrame.new(result.endPosition, result.endPosition + result.direction)

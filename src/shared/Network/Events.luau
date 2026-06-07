@@ -4,6 +4,14 @@ local Red = require(ReplicatedStorage.Packages.Red)
 local Expect = require(script.Parent.Utility).Expect
 
 return {
+	Charm = {
+		RequestState = Red.Event("CharmRequestState", function(...)
+			return ...
+		end),
+		SyncState = Red.Event("CharmSyncState", function(...)
+			return ...
+		end),
+	},
 	Teams = {
 		Init = Red.Event("TeamsInit", function(data)
 			Expect(data, "data", "table")

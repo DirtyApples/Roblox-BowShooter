@@ -16,6 +16,8 @@ local Constants = require(ReplicatedStorage.Shared.Utility.Constants)
 local PlayerEntity = require(ReplicatedStorage.Shared.classes.Entity.PlayerEntity)
 local CollisionGroup = require(ReplicatedStorage.Shared.classes.Wrappers.CollisionGroup)
 
+local ServerCharms = require(ServerScriptService.Server.Services.ServerCharms)
+
 ------------------
 --Initilization--
 ------------------
@@ -95,3 +97,15 @@ Events.Player.RespawnRequest:Server():On(onPlayerRespawnReuest)
 for _, robloxPlayer in ipairs(Players:GetPlayers()) do
 	task.spawn(onPlayerAdded, robloxPlayer)
 end
+
+local time = 1
+local rate = 1
+
+local playersData = PlayerEntity.GetAtom()
+RunService.Heartbeat:Connect(function(deltaTime)
+	time += deltaTime
+	if time >= rate then
+		time = time - rate
+		print(playersData())
+	end
+end)

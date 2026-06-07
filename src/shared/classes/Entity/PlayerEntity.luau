@@ -3,6 +3,8 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 -- Represents a player-controlled entity.
 -- Wraps a Roblox Player + their Character model.
 
+local Charm = require(ReplicatedStorage.Packages.Charm)
+local Charms = require(ReplicatedStorage.Shared.Charm.Charms)
 local Projectile = require(ReplicatedStorage.Shared.classes["Projectile.luau"].Projectile)
 local Entity = require(script.Parent.Entity)
 
@@ -39,6 +41,25 @@ local DEFAULT_GUN_STATS: GunStats = {
 -- ─────────────────────────────────────────────
 --  Constructor
 -- ─────────────────────────────────────────────
+local _atom = Charm.atom({})
+Charms.AddAtom("PlayerEntity", _atom, Charms.FilterPlayer)
+
+function PlayerEntity.GetAtom()
+	return _atom
+end
+
+function PlayerEntity:_syncToAtom()
+	_atom(function(state)
+		local new = table.clone(state)
+		new[self._userId] = {
+			health = self._health,
+			maxHealth = self._maxHealth,
+			isDead = self._isDead,
+			name = self._name,
+		}
+		return new
+	end)
+end
 
 ---@param robloxPlayer Player   The Roblox Player instance (from Players service).
 ---@param maxHealth number?
@@ -61,16 +82,13 @@ function PlayerEntity.new(robloxPlayer: Player, maxHealth: number?): PlayerEntit
 		self:_onCharacterAdded(newCharacter)
 	end)
 
+	self:_syncToAtom()
 	return self
 end
 
 -- ─────────────────────────────────────────────
 --  Serialization
 -- ─────────────────────────────────────────────
-
-function Serialize(): {}
-	return {}
-end
 
 -- ─────────────────────────────────────────────
 --  Accessors
@@ -99,6 +117,11 @@ end
 -- ─────────────────────────────────────────────
 --  Overrides
 -- ─────────────────────────────────────────────
+
+function PlayerEntity:SetHealth(value)
+	Entity.SetHealth(self, value)
+	self:_syncToAtom()
+end
 
 ---Called when the entity takes damage. Override point for subclasses.
 function PlayerEntity:OnTakeDamage(damage: number, source)

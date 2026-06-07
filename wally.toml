@@ -9,3 +9,7 @@ Red = "red-blox/red@^2.0.0"
 Profilestore = "detourious/loleris-profilestore@1.0.0"
 React = "jsdotlua/react@17.2.1"
 ReactRoblox = "jsdotlua/react-roblox@17.2.1"
+react-charm = "littensy/react-charm@0.3.0"
+
+Charm = "littensy/charm@0.10.0"
+charm-sync = "littensy/charm-sync@0.3.0"
