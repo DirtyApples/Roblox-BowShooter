@@ -42,7 +42,7 @@ local _entityHits = {}
 function ProjectileManager.Update(dt: number)
 	table.clear(_entityHits)
 	for _, projectile in _projectiles:GetTable() do
-		local result = projectile:Update(dt)
+		local result = projectile:Update(dt, projectile:GetRaycastParams())
 		local hit = result.hit or nil
 
 		if hit then

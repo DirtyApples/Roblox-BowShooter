@@ -15,8 +15,6 @@ local _projectiles = SwapTable.new()
 -- Local Helpers --
 -------------------
 
-EventBuss.Subscribe(EventBuss.Events.projectileHits, fn)
-
 -------------------
 ----- Utility -----
 -------------------
