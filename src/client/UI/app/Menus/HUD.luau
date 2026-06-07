@@ -22,10 +22,8 @@ local playerAtom = PlayerEntity.GetAtom()
 local function HUD(props: HudProps)
 	local health = 0.5
 	if not UiConstants.DEBUG then
-		local playerId = Players.LocalPlayer.UserId
 		local playerData = react_charm.useAtom(playerAtom)
-		local playerEntry = playerData[tostring(playerId)]
-		health = (playerEntry and playerEntry.health) or -1
+		health = playerData.health and playerData.health / playerData.maxHealth or 0
 	end
 
 	local props = {

@@ -38,10 +38,14 @@ end
 
 -- EntityService.lua
 EventBuss.Subscribe(EventBuss.Events.projectileHits, function(hits)
-	for _, hit in hits do
-		local model = hit.model
-		local projectile = hit.projectile
+	for _, data in hits do
+		local model = data.hit.model
+		local projectile = data.projectile
 		local entity = _modelPlayerMap[model]
+		print("Hit")
+		print(model)
+		print(_modelPlayerMap)
+		print(projectile:GetDamage())
 		if entity then
 			entity:TakeDamage(projectile:GetDamage(), projectile:GetOwner())
 		end

@@ -35,14 +35,17 @@ local function onPlayerAdded(robloxPlayer)
 		return
 	end
 
-	ServerTeamManager.AssigneRandom(robloxPlayer)
+	Events.Teams.Init:Server():Fire(robloxPlayer, Constants.TEAMS)
+	--ServerTeamManager.AssignPlayer(robloxPlayer, Constants.TEAMS.BLUE)
+	ServerTeamManager.AssigneBest(robloxPlayer)
 
 	-- CHARACTER LOAD
 	robloxPlayer.CharacterAdded:Connect(function(character)
 		local humanoid = character:WaitForChild("Humanoid")
 		ServerCharacterLoader.ApplyDescription(humanoid, robloxPlayer)
 
-		CollisionGroup.assignModel(character, ServerTeamManager.GetPlayerTeam(robloxPlayer))
+		local playerTeam = ServerTeamManager.GetPlayerTeam(robloxPlayer)
+		TeamManager.AssignModelToTeam(character, playerTeam)
 
 		--ServerCharacterLoader.ConstructRig(character)
 	end)
@@ -78,7 +81,15 @@ local function onPlayerShoot(robloxPlayer: Player, origin: CFrame, timestamp: nu
 
 	--TODO: COLLISION GROUP FOR PROJECTILES
 	local collisionInfo = ServerTeamManager.GetRaycastParams(robloxPlayer)
-	ServerProjectileManager.CreateProjectile(robloxPlayer, origin, player:GunStats(), collisionInfo, timestamp)
+	print(ServerTeamManager.GetPlayerTeam(robloxPlayer))
+	print(collisionInfo)
+	ServerProjectileManager.CreateProjectile(
+		robloxPlayer,
+		origin,
+		player:GunStats().projectile,
+		collisionInfo,
+		timestamp
+	)
 end
 
 ---------------

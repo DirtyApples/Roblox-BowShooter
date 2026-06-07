@@ -8,6 +8,7 @@ local Workspace = game:GetService("Workspace")
 
 local CharmSync = require(ReplicatedStorage.Packages["charm-sync"])
 local ClientProjectileManager = require(StarterPlayer.StarterPlayerScripts.Client.Services.ClientProjectileManager)
+local ClientTeamManager = require(StarterPlayer.StarterPlayerScripts.Client.Services.ClientTeamManager)
 local MountUI = require(StarterPlayer.StarterPlayerScripts.Client.UI.MountUI)
 local UiConstants = require(StarterPlayer.StarterPlayerScripts.Client.UI.app.UiConstants)
 local Events = require(ReplicatedStorage.Shared.Network.Events)
@@ -54,6 +55,7 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
 		local timestamp = Workspace:GetServerTimeNow()
 		local collisionParams = TeamManager.GetRaycastParams(RobloxPlayer)
 
+		print(collisionParams)
 		ClientProjectileManager.CreateProjectile(
 			RobloxPlayer,
 			cameraCFrame,

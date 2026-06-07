@@ -21,9 +21,7 @@ end
 
 function Charms.FilterPlayer(newData: {}, key: string, userId: number)
 	if newData[key] ~= nil and newData[key][userId] ~= nil then
-		newData[key] = {
-			[userId] = newData[key][userId],
-		}
+		newData[key] = newData[key][userId]
 	else
 		newData[key] = {}
 	end

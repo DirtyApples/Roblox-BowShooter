@@ -18,18 +18,16 @@ PlayerEntity.__index = PlayerEntity
 
 export type GunStats = {
 	mag: number,
-	damage: number,
 
 	projectile: Projectile.Config,
 }
 
 local DEFAULT_GUN_STATS: GunStats = {
 	mag = 7,
-	damage = 7,
 	rof = 0.3,
 
 	projectile = {
-		damage = 10,
+		damage = 25,
 		velocity = 200,
 		lifetime = 10,
 		gravity = 9.8,

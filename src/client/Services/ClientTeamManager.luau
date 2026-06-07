@@ -13,14 +13,13 @@ local _playersTeams: { [Player]: string } = {}
 local _teamsRaycastParams: { [string]: RaycastParams } = {}
 
 Events.Teams.Init:Client():On(function(teams)
+	print("TEAMS INIT")
+	print(teams)
 	TeamManager.InitializeTeams(teams)
 end)
 
 Events.Teams.Joined:Client():On(function(player, team)
-	local team = TeamManager.GetPlayerTeam(player)
-	if team then
-		TeamManager.RemovePlayer(player)
-	end
+	print("TEAM CHABNGED: " .. team)
 	TeamManager.AssignPlayer(player, team)
 end)
 
